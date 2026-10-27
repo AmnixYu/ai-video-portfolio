@@ -10,10 +10,15 @@ function normalizeEmbed(raw) {
   if (src.startsWith("//")) src = "https:" + src;
   try {
     const u = new URL(src);
-    const allowed = ["player.bilibili.com","www.youtube-nocookie.com","www.youtube.com","player.vimeo.com"];
+    const allowed = ["player.bilibili.com", "www.youtube-nocookie.com", "www.youtube.com", "player.vimeo.com"];
     if (allowed.includes(u.hostname)) return u.href;
+    if (u.hostname === "open.douyin.com" && u.pathname === "/player/video" && u.searchParams.get("vid")) return u.href;
+    if ((u.hostname === "www.douyin.com" || u.hostname === "douyin.com") && /^\/video\/\d+/.test(u.pathname)) {
+      const id = u.pathname.match(/^\/video\/(\d+)/)[1];
+      return `https://open.douyin.com/player/video?vid=${id}&autoplay=0`;
+    }
     if (u.protocol === "https:" && /\.(mp4|webm)(\?.*)?$/i.test(u.pathname + u.search)) return u.href;
-  } catch(e) {}
+  } catch (e) {}
   return "";
 }
 function isDirectVideo(url=""){return /\.(mp4|webm)(\?.*)?$/i.test(url);}
