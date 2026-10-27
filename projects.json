@@ -17,12 +17,12 @@
   },
   {
     "id": "sample-2",
-    "title": "666",
-    "category": "AI ACTION",
+    "title": "我妈凌空飞踹 赵小林篇",
+    "category": "AI短片",
     "subtitle": "动作设计 · 镜头调度",
-    "embed": "https://open.douyin.com/player/video?vid=7639755155012881714&autoplay=1",
+    "embed": "https://open.douyin.com/player/video?vid=7701298823808732450&autoplay=1",
     "orientation": "landscape",
-    "cover": "assets/cover-placeholder.svg",
+    "cover": "assets/covers/sample-2.png",
     "description": "这里可以写作品的创作思路、镜头设计和制作流程。",
     "tags": [
       "AI 视频",
