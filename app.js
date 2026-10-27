@@ -43,6 +43,7 @@ function openProject(id){
  const isDouyin=!!url && new URL(url).hostname==="open.douyin.com";
  box.classList.toggle("douyin-player",isDouyin);
  box.classList.toggle("portrait-player",isDouyin && p.orientation==="portrait");
+ box.classList.toggle("landscape-player",isDouyin && p.orientation!=="portrait");
  if(url){if(isDirectVideo(url)){box.innerHTML=`<video controls playsinline src="${esc(url)}"></video>`}else{const iframeUrl=isDouyin?url.replace(/([?&])autoplay=0(&|$)/,"$1autoplay=1$2"):url;box.innerHTML=`<iframe src="${esc(iframeUrl)}" title="${esc(p.title)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" scrolling="no" referrerpolicy="${isDouyin?"unsafe-url":"strict-origin-when-cross-origin"}" allowfullscreen></iframe>`}}else{box.innerHTML=`<div style="position:absolute;inset:0;display:grid;place-items:center;color:#999;font-size:13px">请在管理后台添加有效的视频嵌入代码</div>`}
  const ext=$("#originalLink");if(url){ext.style.display="inline-flex";ext.href=url}else{ext.style.display="none";ext.removeAttribute("href")}
  $("#modal").classList.add("open");$("#modal").setAttribute("aria-hidden","false");document.body.classList.add("no-scroll");$("#modalClose").focus();
