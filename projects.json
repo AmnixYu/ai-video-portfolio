@@ -1,17 +1,17 @@
 [
   {
     "id": "sample-1",
-    "title": "山海异志（示例作品）",
+    "title": "我妈凌空飞踹 张阿梅篇",
     "category": "AI SHORT FILM",
-    "cover": "assets/cover-placeholder.svg",
-    "subtitle": "AI 短片 · 奇幻 · 视觉叙事",
+    "subtitle": "AI 短片 · 故事 · 角色演绎",
+    "embed": "https://player.bilibili.com/player.html?isOutside=true&aid=117510909269484&bvid=BV1AKxK69EyV&cid=43089133739&p=1",
+    "cover": "assets/covers/sample-1.png",
     "description": "这里填写作品介绍。可以介绍创意来源、故事设定、你的具体职责，以及制作中遇到的技术挑战。",
     "tags": [
       "ComfyUI",
       "AI 视频生成",
       "后期剪辑"
     ],
-    "embed": "<iframe src=\"//player.bilibili.com/player.html?isOutside=true&aid=117510909269484&bvid=BV1AKxK69EyV&cid=43089133739&p=1\" scrolling=\"no\" border=\"0\" frameborder=\"no\" framespacing=\"0\" allowfullscreen=\"true\"></iframe>",
     "published": true,
     "order": 1
   },
