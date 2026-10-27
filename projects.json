@@ -33,16 +33,17 @@
   },
   {
     "id": "sample-3",
-    "title": "AI 品牌广告（示例）",
+    "title": "123",
     "category": "COMMERCIAL",
-    "cover": "assets/cover-placeholder.svg",
     "subtitle": "商业影像 · 产品视觉",
+    "embed": "https://open.douyin.com/player/video?vid=7674068446082059555&autoplay=1",
+    "orientation": "landscape",
+    "cover": "assets/cover-placeholder.svg",
     "description": "替换为你的真实作品。示例作品可以在管理后台隐藏或删除。",
     "tags": [
       "视觉开发",
       "剪辑"
     ],
-    "embed": "",
     "published": true,
     "order": 3
   }
