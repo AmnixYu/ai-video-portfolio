@@ -15,7 +15,7 @@ function normalizeEmbed(raw) {
     if (u.hostname === "open.douyin.com" && u.pathname === "/player/video" && u.searchParams.get("vid")) return u.href;
     if ((u.hostname === "www.douyin.com" || u.hostname === "douyin.com") && /^\/video\/\d+/.test(u.pathname)) {
       const id = u.pathname.match(/^\/video\/(\d+)/)[1];
-      return `https://open.douyin.com/player/video?vid=${id}&autoplay=0`;
+      return `https://open.douyin.com/player/video?vid=${id}&autoplay=1`;
     }
     if (u.protocol === "https:" && /\.(mp4|webm)(\?.*)?$/i.test(u.pathname + u.search)) return u.href;
   } catch (e) {}
@@ -40,7 +40,10 @@ function openProject(id){
  $("#modalDescription").textContent=p.description||"";
  $("#modalTags").innerHTML=(p.tags||[]).map(t=>`<span class="modal-tag">${esc(t)}</span>`).join("");
  const url=normalizeEmbed(p.embed||"");const box=$("#modalVideo");
- if(url){if(isDirectVideo(url)){box.innerHTML=`<video controls playsinline src="${esc(url)}"></video>`}else{box.innerHTML=`<iframe src="${esc(url)}" title="${esc(p.title)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`}}else{box.innerHTML=`<div style="position:absolute;inset:0;display:grid;place-items:center;color:#999;font-size:13px">请在管理后台添加有效的视频嵌入代码</div>`}
+ const isDouyin=!!url && new URL(url).hostname==="open.douyin.com";
+ box.classList.toggle("douyin-player",isDouyin);
+ box.classList.toggle("portrait-player",isDouyin && p.orientation==="portrait");
+ if(url){if(isDirectVideo(url)){box.innerHTML=`<video controls playsinline src="${esc(url)}"></video>`}else{const iframeUrl=isDouyin?url.replace(/([?&])autoplay=0(&|$)/,"$1autoplay=1$2"):url;box.innerHTML=`<iframe src="${esc(iframeUrl)}" title="${esc(p.title)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" scrolling="no" referrerpolicy="${isDouyin?"unsafe-url":"strict-origin-when-cross-origin"}" allowfullscreen></iframe>`}}else{box.innerHTML=`<div style="position:absolute;inset:0;display:grid;place-items:center;color:#999;font-size:13px">请在管理后台添加有效的视频嵌入代码</div>`}
  const ext=$("#originalLink");if(url){ext.style.display="inline-flex";ext.href=url}else{ext.style.display="none";ext.removeAttribute("href")}
  $("#modal").classList.add("open");$("#modal").setAttribute("aria-hidden","false");document.body.classList.add("no-scroll");$("#modalClose").focus();
 }
