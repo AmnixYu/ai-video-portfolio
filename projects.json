@@ -115,5 +115,18 @@
     "tags": [],
     "published": true,
     "order": 8
+  },
+  {
+    "id": "work-mvshw9wr",
+    "title": "《无界》新片场Shotlab",
+    "category": "广告",
+    "subtitle": "AI广告 动感",
+    "embed": "https://open.douyin.com/player/video?vid=7680064830329474356&autoplay=1",
+    "orientation": "landscape",
+    "cover": "assets/covers/work-mvshw9wr.jpg",
+    "description": "",
+    "tags": [],
+    "published": true,
+    "order": 9
   }
 ]
