@@ -6,7 +6,7 @@
     "subtitle": "AI 短片 · 故事 · 角色演绎",
     "embed": "https://open.douyin.com/player/video?vid=7700924851099340070&autoplay=1",
     "orientation": "landscape",
-    "cover": "assets/covers/sample-1.png",
+    "cover": "assets/covers/sample-1.jpg",
     "description": "这里填写作品介绍。可以介绍创意来源、故事设定、你的具体职责，以及制作中遇到的技术挑战。",
     "tags": [
       "ComfyUI",
