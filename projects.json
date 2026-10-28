@@ -33,12 +33,12 @@
   },
   {
     "id": "sample-3",
-    "title": "123",
-    "category": "COMMERCIAL",
-    "subtitle": "商业影像 · 产品视觉",
-    "embed": "https://open.douyin.com/player/video?vid=7674068446082059555&autoplay=1",
+    "title": "接地气001 我们来人界搞点钱",
+    "category": "短剧",
+    "subtitle": "喜剧·轻玄幻",
+    "embed": "https://player.bilibili.com/player.html?isOutside=true&aid=117308156679993&bvid=BV1ynhi6WERb&cid=42078832958&p=1",
     "orientation": "landscape",
-    "cover": "assets/cover-placeholder.svg",
+    "cover": "assets/covers/sample-3.png",
     "description": "替换为你的真实作品。示例作品可以在管理后台隐藏或删除。",
     "tags": [
       "视觉开发",
