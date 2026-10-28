@@ -112,5 +112,21 @@
     "tags": [],
     "published": true,
     "order": 8
+  },
+  {
+    "id": "work-mvshlef6",
+    "title": "《纵马韶华》MV",
+    "category": "MV",
+    "subtitle": "动画 音乐",
+    "embed": "https://open.douyin.com/player/video?vid=7643034687643913978&autoplay=1",
+    "orientation": "landscape",
+    "cover": "assets/covers/work-mvshlef6.jpg",
+    "description": "",
+    "tags": [
+      "HappyHorse",
+      "Seedance2.0"
+    ],
+    "published": true,
+    "order": 9
   }
 ]
