@@ -2,7 +2,7 @@
   {
     "id": "sample-1",
     "title": "我妈凌空飞踹 张阿梅篇",
-    "category": "AI SHORT FILM",
+    "category": "短片",
     "subtitle": "AI 短片 · 故事 · 角色演绎",
     "embed": "https://open.douyin.com/player/video?vid=7700924851099340070&autoplay=1",
     "orientation": "landscape",
@@ -33,6 +33,19 @@
     "order": 2
   },
   {
+    "id": "work-mvsg6uov",
+    "title": "山海志异：鸰䳩",
+    "category": "AI动画",
+    "subtitle": "故事 志怪 毛毡动画",
+    "embed": "https://open.douyin.com/player/video?vid=7664267399620742409&autoplay=1",
+    "orientation": "landscape",
+    "cover": "assets/covers/work-mvsg6uov.jpg",
+    "description": "",
+    "tags": [],
+    "published": true,
+    "order": 3
+  },
+  {
     "id": "sample-3",
     "title": "接地气001 我们来人界搞点钱",
     "category": "短剧",
@@ -46,7 +59,20 @@
       "剪辑"
     ],
     "published": true,
-    "order": 3
+    "order": 4
+  },
+  {
+    "id": "work-mvsh2pfj",
+    "title": "Little Flame",
+    "category": "AI 动画",
+    "subtitle": "MV 北欧 3D动画 克苏鲁",
+    "embed": "https://open.douyin.com/player/video?vid=7663050237690318134&autoplay=1",
+    "orientation": "landscape",
+    "cover": "assets/covers/work-mvsh2pfj.jpg",
+    "description": "",
+    "tags": [],
+    "published": true,
+    "order": 5
   },
   {
     "id": "work-mvs8abr8",
@@ -59,7 +85,7 @@
     "description": "",
     "tags": [],
     "published": true,
-    "order": 4
+    "order": 6
   },
   {
     "id": "work-mvs8d3es",
@@ -69,32 +95,6 @@
     "embed": "https://open.douyin.com/player/video?vid=7680064830329474356&autoplay=1",
     "orientation": "landscape",
     "cover": "assets/covers/work-mvs8d3es.jpg",
-    "description": "",
-    "tags": [],
-    "published": true,
-    "order": 5
-  },
-  {
-    "id": "work-mvsg6uov",
-    "title": "山海志异：鸰䳩",
-    "category": "AI动画",
-    "subtitle": "故事 志怪 毛毡动画",
-    "embed": "https://open.douyin.com/player/video?vid=7664267399620742409&autoplay=1",
-    "orientation": "landscape",
-    "cover": "assets/covers/work-mvsg6uov.jpg",
-    "description": "",
-    "tags": [],
-    "published": true,
-    "order": 6
-  },
-  {
-    "id": "work-mvsh2pfj",
-    "title": "Little Flame",
-    "category": "AI 动画",
-    "subtitle": "MV 北欧 3D动画 克苏鲁",
-    "embed": "https://open.douyin.com/player/video?vid=7663050237690318134&autoplay=1",
-    "orientation": "landscape",
-    "cover": "assets/covers/work-mvsh2pfj.jpg",
     "description": "",
     "tags": [],
     "published": true,
