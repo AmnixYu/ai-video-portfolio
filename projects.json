@@ -86,5 +86,18 @@
     "tags": [],
     "published": true,
     "order": 6
+  },
+  {
+    "id": "work-mvsh2pfj",
+    "title": "Little Flame",
+    "category": "AI 动画",
+    "subtitle": "MV 北欧 3D动画 克苏鲁",
+    "embed": "https://open.douyin.com/player/video?vid=7663050237690318134&autoplay=1",
+    "orientation": "landscape",
+    "cover": "assets/covers/work-mvsh2pfj.jpg",
+    "description": "",
+    "tags": [],
+    "published": true,
+    "order": 7
   }
 ]
