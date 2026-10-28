@@ -56,7 +56,6 @@ function fitDouyin(box, allowRetry){
   const iframe = wrap.querySelector("iframe");
   if (!iframe) return;
   const portrait = box.classList.contains("portrait-player");
-  // 用大尺寸基准，让抖音渲染完整的桌面布局，而不是手机端"竖屏沉浸式"UI
   const baseW = portrait ? 720 : 1280;
   const baseH = portrait ? 1280 : 720;
   iframe.style.width  = baseW + "px";
@@ -90,9 +89,11 @@ function openProject(id){
    if(isDirectVideo(url)){
      box.innerHTML=`<video controls playsinline src="${esc(url)}"></video>`;
    }else if(isDouyin){
-     const iframeUrl=url.replace(/([?&])autoplay=0(&|$)/,"$1autoplay=1$2");
+     // 关键改动：加上 &muted=1，让自动播放能稳定触发
+     const iframeUrl=url.replace(/([?&])autoplay=0(&|$)/,"$1autoplay=1$2")
+                        .replace(/([?&])muted=[^&]*/,"") // 先清掉可能存在的旧 muted
+                        + (url.includes("?") ? "&" : "?") + "muted=1";
      const baseW=portrait?720:1280, baseH=portrait?1280:720;
-     // iframe 创建时就用内联尺寸，让抖音首帧按正确方向渲染
      box.innerHTML=`<div class="douyin-scale-wrap" style="width:${baseW}px;height:${baseH}px"><iframe src="${esc(iframeUrl)}" width="${baseW}" height="${baseH}" style="width:${baseW}px;height:${baseH}px" title="${esc(p.title)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" scrolling="no" referrerpolicy="unsafe-url" allowfullscreen></iframe></div>`;
      douyinResizeHandler=()=>fitDouyin(box);
      window.addEventListener("resize",douyinResizeHandler);
