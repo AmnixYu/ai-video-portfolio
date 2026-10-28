@@ -34,6 +34,40 @@ function renderGrid(){
  $("#workGrid").innerHTML=projects.length?projects.map((p,i)=>`<article class="work-card" tabindex="0" role="button" data-id="${esc(p.id)}" aria-label="查看 ${esc(p.title)}"><div class="work-image"><img loading="lazy" src="${esc(p.cover||"assets/cover-placeholder.svg")}" alt="${esc(p.title)}" onerror="this.src='assets/cover-placeholder.svg'"><span class="play-indicator">↗</span></div><div class="work-meta"><div><h3>${esc(p.title)}</h3><p>${esc(p.category||"PROJECT")}</p></div><span class="work-index">${String(i+1).padStart(2,"0")}</span></div></article>`).join(""):`<div class="empty-state">目前没有展示中的作品。</div>`;
  $("#workGrid").querySelectorAll(".work-card").forEach(card=>{const open=()=>openProject(card.dataset.id);card.addEventListener("click",open);card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();open()}})});
 }
+
+/* ===== 抖音播放器自适应缩放 ===== */
+let douyinResizeHandler = null;
+
+function clearDouyinResize(){
+  if (douyinResizeHandler) {
+    window.removeEventListener("resize", douyinResizeHandler);
+    douyinResizeHandler = null;
+  }
+}
+
+function fitDouyin(box, allowRetry){
+  const wrap = box.querySelector(".douyin-scale-wrap");
+  if (!wrap) return;
+  const iframe = wrap.querySelector("iframe");
+  if (!iframe) return;
+  const portrait = box.classList.contains("portrait-player");
+  const baseW = portrait ? 400 : 640;
+  const baseH = portrait ? 711 : 360;
+  iframe.style.width = baseW + "px";
+  iframe.style.height = baseH + "px";
+  wrap.style.width = baseW + "px";
+  wrap.style.height = baseH + "px";
+  const availW = box.clientWidth;
+  const availH = box.clientHeight;
+  if (!availW || !availH) {
+    if (allowRetry !== false) setTimeout(() => fitDouyin(box, false), 80);
+    return;
+  }
+  const scale = Math.min(availW / baseW, availH / baseH, 1);
+  wrap.style.transform = `translate(-50%, -50%) scale(${scale})`;
+}
+/* ===== 抖音播放器适配结束 ===== */
+
 function openProject(id){
  const p=state.projects.find(x=>x.id===id);if(!p)return;
  $("#modalCategory").textContent=p.category||"PROJECT";$("#modalTitle").textContent=p.title||"Untitled";$("#modalSubtitle").textContent=p.subtitle||"";
@@ -43,13 +77,40 @@ function openProject(id){
  const isDouyin=!!url && new URL(url).hostname==="open.douyin.com";
  box.classList.toggle("douyin-player",isDouyin);
  box.classList.toggle("portrait-player",isDouyin && p.orientation==="portrait");
- box.classList.toggle("landscape-player",isDouyin && p.orientation!=="portrait");
- if(url){if(isDirectVideo(url)){box.innerHTML=`<video controls playsinline src="${esc(url)}"></video>`}else{const iframeUrl=isDouyin?url.replace(/([?&])autoplay=0(&|$)/,"$1autoplay=1$2"):url;box.innerHTML=`<iframe src="${esc(iframeUrl)}" title="${esc(p.title)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" scrolling="no" referrerpolicy="${isDouyin?"unsafe-url":"strict-origin-when-cross-origin"}" allowfullscreen></iframe>`}}else{box.innerHTML=`<div style="position:absolute;inset:0;display:grid;place-items:center;color:#999;font-size:13px">请在管理后台添加有效的视频嵌入代码</div>`}
+ clearDouyinResize();
+
+ if(url){
+   if(isDirectVideo(url)){
+     box.innerHTML=`<video controls playsinline src="${esc(url)}"></video>`;
+   }else if(isDouyin){
+     const iframeUrl=url.replace(/([?&])autoplay=0(&|$)/,"$1autoplay=1$2");
+     box.innerHTML=`<div class="douyin-scale-wrap"><iframe src="${esc(iframeUrl)}" title="${esc(p.title)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" scrolling="no" referrerpolicy="unsafe-url" allowfullscreen></iframe></div>`;
+     douyinResizeHandler=()=>fitDouyin(box);
+     window.addEventListener("resize",douyinResizeHandler);
+     requestAnimationFrame(()=>requestAnimationFrame(()=>fitDouyin(box)));
+   }else{
+     box.innerHTML=`<iframe src="${esc(url)}" title="${esc(p.title)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" scrolling="no" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+   }
+ }else{
+   box.innerHTML=`<div style="position:absolute;inset:0;display:grid;place-items:center;color:#999;font-size:13px">请在管理后台添加有效的视频嵌入代码</div>`;
+ }
+
  const ext=$("#originalLink");if(url){ext.style.display="inline-flex";ext.href=url}else{ext.style.display="none";ext.removeAttribute("href")}
  $("#modal").classList.add("open");$("#modal").setAttribute("aria-hidden","false");document.body.classList.add("no-scroll");$("#modalClose").focus();
 }
-function closeModal(){ $("#modal").classList.remove("open");$("#modal").setAttribute("aria-hidden","true");$("#modalVideo").innerHTML="";document.body.classList.remove("no-scroll");}
-$("#modalClose").addEventListener("click",closeModal);$("#modal").addEventListener("click",e=>{if(e.target===$("#modal"))closeModal()});document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
+
+function closeModal(){
+ clearDouyinResize();
+ $("#modal").classList.remove("open");
+ $("#modal").setAttribute("aria-hidden","true");
+ $("#modalVideo").innerHTML="";
+ document.body.classList.remove("no-scroll");
+}
+
+$("#modalClose").addEventListener("click",closeModal);
+$("#modal").addEventListener("click",e=>{if(e.target===$("#modal"))closeModal()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
+
 async function init(){
  $("#year").textContent=new Date().getFullYear();
  try{const r=await fetch("projects.json",{cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);state.projects=await r.json();state.projects=state.projects.filter(p=>p.published!==false);renderFilters();renderGrid();}
