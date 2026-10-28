@@ -1,6 +1,23 @@
 const $ = (s) => document.querySelector(s);
 const state = { projects: [], filter: "ALL" };
 const esc = (v="") => String(v).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+const PLACEHOLDER = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 9"><rect width="16" height="9" fill="#20201e"/><text x="8" y="4.7" font-size="0.65" fill="#92918d" text-anchor="middle" dominant-baseline="middle" font-family="monospace" letter-spacing="0.08">NO COVER</text></svg>'
+);
+
+/* 封面路径：中文/空格做一次安全编码，data:/http(s) 直接返回 */
+function coverUrl(p){
+  const s = String(p || "").trim();
+  if (!s) return PLACEHOLDER;
+  if (/^(data:|blob:|https?:)/i.test(s)) return s;
+  try {
+    return encodeURI(decodeURI(s));
+  } catch (e) {
+    return encodeURI(s);
+  }
+}
+
 function normalizeEmbed(raw) {
   const s = String(raw || "").trim();
   if (!s) return "";
@@ -31,7 +48,18 @@ function renderFilters(){
 }
 function renderGrid(){
  const projects=visibleProjects();$("#workCount").textContent=state.projects.filter(p=>p.published!==false).length;
- $("#workGrid").innerHTML=projects.length?projects.map((p,i)=>`<article class="work-card" tabindex="0" role="button" data-id="${esc(p.id)}" aria-label="查看 ${esc(p.title)}"><div class="work-image"><img loading="lazy" src="${esc(p.cover||"assets/cover-placeholder.svg")}" alt="${esc(p.title)}" onerror="this.src='assets/cover-placeholder.svg'"><span class="play-indicator">↗</span></div><div class="work-meta"><div><h3>${esc(p.title)}</h3><p>${esc(p.category||"PROJECT")}</p></div><span class="work-index">${String(i+1).padStart(2,"0")}</span></div></article>`).join(""):`<div class="empty-state">目前没有展示中的作品。</div>`;
+ $("#workGrid").innerHTML=projects.length?projects.map((p,i)=>{
+   const cover = coverUrl(p.cover);
+   return `<article class="work-card" tabindex="0" role="button" data-id="${esc(p.id)}" aria-label="查看 ${esc(p.title)}"><div class="work-image"><img decoding="async" src="${esc(cover)}" data-fallback="${esc(PLACEHOLDER)}" alt="${esc(p.title)}"><span class="play-indicator">↗</span></div><div class="work-meta"><div><h3>${esc(p.title)}</h3><p>${esc(p.category||"PROJECT")}</p></div><span class="work-index">${String(i+1).padStart(2,"0")}</span></div></article>`;
+ }).join(""):`<div class="empty-state">目前没有展示中的作品。</div>`;
+
+ $("#workGrid").querySelectorAll(".work-image img").forEach(img=>{
+   img.addEventListener("error", function onErr(){
+     img.removeEventListener("error", onErr);
+     img.src = img.dataset.fallback || PLACEHOLDER;
+   });
+ });
+
  $("#workGrid").querySelectorAll(".work-card").forEach(card=>{const open=()=>openProject(card.dataset.id);card.addEventListener("click",open);card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();open()}})});
 }
 
@@ -89,9 +117,8 @@ function openProject(id){
    if(isDirectVideo(url)){
      box.innerHTML=`<video controls playsinline src="${esc(url)}"></video>`;
    }else if(isDouyin){
-     // 关键改动：加上 &muted=1，让自动播放能稳定触发
      const iframeUrl=url.replace(/([?&])autoplay=0(&|$)/,"$1autoplay=1$2")
-                        .replace(/([?&])muted=[^&]*/,"") // 先清掉可能存在的旧 muted
+                        .replace(/([?&])muted=[^&]*/,"")
                         + (url.includes("?") ? "&" : "?") + "muted=1";
      const baseW=portrait?720:1280, baseH=portrait?1280:720;
      box.innerHTML=`<div class="douyin-scale-wrap" style="width:${baseW}px;height:${baseH}px"><iframe src="${esc(iframeUrl)}" width="${baseW}" height="${baseH}" style="width:${baseW}px;height:${baseH}px" title="${esc(p.title)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" scrolling="no" referrerpolicy="unsafe-url" allowfullscreen></iframe></div>`;
