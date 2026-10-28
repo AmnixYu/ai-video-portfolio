@@ -51,19 +51,25 @@ function fitDouyin(box, allowRetry){
   const iframe = wrap.querySelector("iframe");
   if (!iframe) return;
   const portrait = box.classList.contains("portrait-player");
-  const baseW = portrait ? 400 : 640;
-  const baseH = portrait ? 711 : 360;
-  iframe.style.width = baseW + "px";
-  iframe.style.height = baseH + "px";
-  wrap.style.width = baseW + "px";
-  wrap.style.height = baseH + "px";
+  /* 抖音播放器自身可正常渲染的最小宽度（横屏 640，竖屏 400） */
+  const MIN_W = portrait ? 400 : 640;
+  const ratio = portrait ? 711 / 400 : 360 / 640;
   const availW = box.clientWidth;
   const availH = box.clientHeight;
   if (!availW || !availH) {
     if (allowRetry !== false) setTimeout(() => fitDouyin(box, false), 80);
     return;
   }
-  const scale = Math.min(availW / baseW, availH / baseH, 1);
+  /* 基准尺寸：取"容器宽"和"最小宽度"里较大的那个
+     —— 大屏时基准 = 容器宽（不放大、填满）；
+     —— 小屏时基准 = 640（抖音最小可渲染宽度），再整体 scale 缩进容器 */
+  const baseW = Math.max(MIN_W, availW, availH / ratio);
+  const baseH = baseW * ratio;
+  iframe.style.width = baseW + "px";
+  iframe.style.height = baseH + "px";
+  wrap.style.width = baseW + "px";
+  wrap.style.height = baseH + "px";
+  const scale = Math.min(availW / baseW, availH / baseH);
   wrap.style.transform = `translate(-50%, -50%) scale(${scale})`;
 }
 /* ===== 抖音播放器适配结束 ===== */
