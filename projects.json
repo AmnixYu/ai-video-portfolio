@@ -99,5 +99,18 @@
     "tags": [],
     "published": true,
     "order": 7
+  },
+  {
+    "id": "work-mvshg5jv",
+    "title": "UFO广告 世界之上 边界之外",
+    "category": "广告",
+    "subtitle": "恶搞 高端 汽车",
+    "embed": "https://open.douyin.com/player/video?vid=7651164167847660846&autoplay=1",
+    "orientation": "landscape",
+    "cover": "assets/covers/work-mvshg5jv.jpg",
+    "description": "",
+    "tags": [],
+    "published": true,
+    "order": 8
   }
 ]
