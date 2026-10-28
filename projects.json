@@ -75,18 +75,15 @@
     "order": 5
   },
   {
-    "id": "work-mvshlef6",
-    "title": "《纵马韶华》MV",
-    "category": "动画",
-    "subtitle": "动画 音乐",
-    "embed": "https://open.douyin.com/player/video?vid=7643034687643913978&autoplay=1",
+    "id": "work-mvshw9wr",
+    "title": "《无界》新片场Shotlab",
+    "category": "广告",
+    "subtitle": "AI广告 动感",
+    "embed": "https://open.douyin.com/player/video?vid=7680064830329474356&autoplay=1",
     "orientation": "landscape",
-    "cover": "assets/covers/work-mvshlef6.jpg",
+    "cover": "assets/covers/work-mvshw9wr.jpg",
     "description": "",
-    "tags": [
-      "HappyHorse",
-      "Seedance2.0"
-    ],
+    "tags": [],
     "published": true,
     "order": 6
   },
@@ -117,15 +114,18 @@
     "order": 8
   },
   {
-    "id": "work-mvshw9wr",
-    "title": "《无界》新片场Shotlab",
-    "category": "广告",
-    "subtitle": "AI广告 动感",
-    "embed": "https://open.douyin.com/player/video?vid=7680064830329474356&autoplay=1",
+    "id": "work-mvshlef6",
+    "title": "《纵马韶华》MV",
+    "category": "动画",
+    "subtitle": "动画 音乐",
+    "embed": "https://open.douyin.com/player/video?vid=7643034687643913978&autoplay=1",
     "orientation": "landscape",
-    "cover": "assets/covers/work-mvshw9wr.jpg",
+    "cover": "assets/covers/work-mvshlef6.jpg",
     "description": "",
-    "tags": [],
+    "tags": [
+      "HappyHorse",
+      "Seedance2.0"
+    ],
     "published": true,
     "order": 9
   }
