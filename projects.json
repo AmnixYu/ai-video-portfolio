@@ -60,5 +60,18 @@
     "tags": [],
     "published": true,
     "order": 4
+  },
+  {
+    "id": "work-mvs8d3es",
+    "title": "新片场Shotlab：无限可能 放手去做",
+    "category": "广告",
+    "subtitle": "AI广告 动感",
+    "embed": "https://open.douyin.com/player/video?vid=7680064830329474356&autoplay=1",
+    "orientation": "landscape",
+    "cover": "assets/covers/work-mvs8d3es.png",
+    "description": "",
+    "tags": [],
+    "published": true,
+    "order": 5
   }
 ]
