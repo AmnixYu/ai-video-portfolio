@@ -37,11 +37,16 @@ function renderGrid(){
 
 /* ===== 抖音播放器自适应缩放 ===== */
 let douyinResizeHandler = null;
+let douyinObserver = null;
 
 function clearDouyinResize(){
   if (douyinResizeHandler) {
     window.removeEventListener("resize", douyinResizeHandler);
     douyinResizeHandler = null;
+  }
+  if (douyinObserver) {
+    douyinObserver.disconnect();
+    douyinObserver = null;
   }
 }
 
@@ -51,24 +56,19 @@ function fitDouyin(box, allowRetry){
   const iframe = wrap.querySelector("iframe");
   if (!iframe) return;
   const portrait = box.classList.contains("portrait-player");
-  /* 抖音播放器自身可正常渲染的最小宽度（横屏 640，竖屏 400） */
-  const MIN_W = portrait ? 400 : 640;
-  const ratio = portrait ? 711 / 400 : 360 / 640;
+  // 用大尺寸基准，让抖音渲染完整的桌面布局，而不是手机端"竖屏沉浸式"UI
+  const baseW = portrait ? 720 : 1280;
+  const baseH = portrait ? 1280 : 720;
+  iframe.style.width  = baseW + "px";
+  iframe.style.height = baseH + "px";
+  wrap.style.width  = baseW + "px";
+  wrap.style.height = baseH + "px";
   const availW = box.clientWidth;
   const availH = box.clientHeight;
   if (!availW || !availH) {
-    if (allowRetry !== false) setTimeout(() => fitDouyin(box, false), 80);
+    if (allowRetry !== false) setTimeout(() => fitDouyin(box, false), 100);
     return;
   }
-  /* 基准尺寸：取"容器宽"和"最小宽度"里较大的那个
-     —— 大屏时基准 = 容器宽（不放大、填满）；
-     —— 小屏时基准 = 640（抖音最小可渲染宽度），再整体 scale 缩进容器 */
-  const baseW = Math.max(MIN_W, availW, availH / ratio);
-  const baseH = baseW * ratio;
-  iframe.style.width = baseW + "px";
-  iframe.style.height = baseH + "px";
-  wrap.style.width = baseW + "px";
-  wrap.style.height = baseH + "px";
   const scale = Math.min(availW / baseW, availH / baseH);
   wrap.style.transform = `translate(-50%, -50%) scale(${scale})`;
 }
@@ -81,8 +81,9 @@ function openProject(id){
  $("#modalTags").innerHTML=(p.tags||[]).map(t=>`<span class="modal-tag">${esc(t)}</span>`).join("");
  const url=normalizeEmbed(p.embed||"");const box=$("#modalVideo");
  const isDouyin=!!url && new URL(url).hostname==="open.douyin.com";
+ const portrait=isDouyin && p.orientation==="portrait";
  box.classList.toggle("douyin-player",isDouyin);
- box.classList.toggle("portrait-player",isDouyin && p.orientation==="portrait");
+ box.classList.toggle("portrait-player",portrait);
  clearDouyinResize();
 
  if(url){
@@ -90,9 +91,15 @@ function openProject(id){
      box.innerHTML=`<video controls playsinline src="${esc(url)}"></video>`;
    }else if(isDouyin){
      const iframeUrl=url.replace(/([?&])autoplay=0(&|$)/,"$1autoplay=1$2");
-     box.innerHTML=`<div class="douyin-scale-wrap"><iframe src="${esc(iframeUrl)}" title="${esc(p.title)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" scrolling="no" referrerpolicy="unsafe-url" allowfullscreen></iframe></div>`;
+     const baseW=portrait?720:1280, baseH=portrait?1280:720;
+     // iframe 创建时就用内联尺寸，让抖音首帧按正确方向渲染
+     box.innerHTML=`<div class="douyin-scale-wrap" style="width:${baseW}px;height:${baseH}px"><iframe src="${esc(iframeUrl)}" width="${baseW}" height="${baseH}" style="width:${baseW}px;height:${baseH}px" title="${esc(p.title)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" scrolling="no" referrerpolicy="unsafe-url" allowfullscreen></iframe></div>`;
      douyinResizeHandler=()=>fitDouyin(box);
      window.addEventListener("resize",douyinResizeHandler);
+     if ("ResizeObserver" in window) {
+       douyinObserver = new ResizeObserver(() => fitDouyin(box, false));
+       douyinObserver.observe(box);
+     }
      requestAnimationFrame(()=>requestAnimationFrame(()=>fitDouyin(box)));
    }else{
      box.innerHTML=`<iframe src="${esc(url)}" title="${esc(p.title)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" scrolling="no" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
