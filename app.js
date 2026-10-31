@@ -47,7 +47,22 @@ function renderFilters(){
  $("#filters").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{state.filter=b.dataset.filter;renderFilters();renderGrid()}));
 }
 function renderGrid(){
- const projects=visibleProjects();$("#workCount").textContent=state.projects.filter(p=>p.published!==false).length;
+ const projects=visibleProjects();
+ const allPublished=state.projects.filter(p=>p.published!==false).sort((a,b)=>(a.order||0)-(b.order||0));
+ $("#workCount").textContent=String(allPublished.length).padStart(2,"0");
+ const featured=allPublished[0];
+ const heroVisual=$("#heroVisual");
+ if(featured && heroVisual){
+   const heroCover=coverUrl(featured.cover);
+   heroVisual.querySelector(".hero-image-placeholder").innerHTML=`<img src="${esc(heroCover)}" alt="${esc(featured.title)}" loading="eager"><span>STORIES IN MOTION</span>`;
+   $("#heroCaption").textContent=featured.title||"精选影像";
+   const heroImg=heroVisual.querySelector("img");
+   heroImg.addEventListener("error",()=>{heroImg.src=PLACEHOLDER},{once:true});
+   heroVisual.style.cursor="pointer";
+   heroVisual.setAttribute("role","button");heroVisual.setAttribute("tabindex","0");
+   heroVisual.onclick=()=>openProject(featured.id);
+   heroVisual.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openProject(featured.id)}};
+ }
  $("#workGrid").innerHTML=projects.length?projects.map((p,i)=>{
    const cover = coverUrl(p.cover);
    return `<article class="work-card" tabindex="0" role="button" data-id="${esc(p.id)}" aria-label="查看 ${esc(p.title)}"><div class="work-image"><img decoding="async" src="${esc(cover)}" data-fallback="${esc(PLACEHOLDER)}" alt="${esc(p.title)}"><span class="play-indicator">↗</span></div><div class="work-meta"><div><h3>${esc(p.title)}</h3><p>${esc(p.category||"PROJECT")}</p></div><span class="work-index">${String(i+1).padStart(2,"0")}</span></div></article>`;
@@ -156,7 +171,7 @@ async function init(){
  $("#year").textContent=new Date().getFullYear();
  try{const r=await fetch("projects.json",{cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);state.projects=await r.json();state.projects=state.projects.filter(p=>p.published!==false);renderFilters();renderGrid();}
  catch(e){$("#workGrid").innerHTML='<div class="empty-state">作品列表暂时无法载入。请稍后刷新。</div>';}
- try{const r=await fetch("site-settings.json",{cache:"no-store"});if(r.ok){const s=await r.json();if(s.heroIntro)$("#heroIntro").textContent=s.heroIntro;if(s.aboutText)$("#aboutText").textContent=s.aboutText;if(s.contactText)$("#contactText").textContent=s.contactText;if(s.email){$("#contactLink").textContent=s.email+" ↗";$("#contactLink").href="mailto:"+s.email}if(Array.isArray(s.skills))$("#skills").innerHTML=s.skills.map(x=>`<span class="skill">${esc(x)}</span>`).join("")}}
+ try{const r=await fetch("site-settings.json",{cache:"no-store"});if(r.ok){const s=await r.json();if(s.heroIntro)$("#heroIntro").textContent=s.heroIntro;if(s.aboutText)$("#aboutText").textContent=s.aboutText;if(s.contactText)$("#contactText").textContent=s.contactText;if(s.email){$("#contactChannel").hidden=false;$("#contactEmail").textContent=s.email;$("#contactEmail").innerHTML=`<a href="mailto:${esc(s.email)}">${esc(s.email)}</a>`}if(Array.isArray(s.skills))$("#skills").innerHTML=s.skills.map(x=>`<span class="skill">${esc(x)}</span>`).join("")}}
  catch(e){}
 }
 init();
